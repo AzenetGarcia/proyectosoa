@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
 use Faker\Factory as Faker;
@@ -13,9 +12,9 @@ class ProductSeeder extends Seeder
     {
         $faker = Faker::create();
         $categories = [
-            'Blanco', 'Integral', 'Dulce', 'Artesanal', 'Sin gluten',
-            'Regional', 'Enriquecido', 'De molde', 'Crujiente',
-            'Dulce relleno', 'Salado', 'Festivo', 'Vegano'
+            'blanco', 'integral', 'dulce', 'artesanal', 'sin_gluten',
+            'regional', 'enriquecido', 'de_molde', 'crujiente',
+            'dulce_relleno', 'salado', 'festivo', 'vegano'
         ];
 
         $productNames = [
@@ -27,12 +26,16 @@ class ProductSeeder extends Seeder
         for ($i = 1; $i <= 200; $i++) {
             $category = $faker->randomElement($categories);
             $baseName = $faker->randomElement($productNames);
+            $purchasePrice = $faker->randomFloat(2, 1, 10); // Compra entre 1.00 y 10.00
+            $salePrice = $faker->randomFloat(2, $purchasePrice + 1, $purchasePrice + 10); // Venta con margen
+
             Product::create([
-                'name' => $baseName . ' ' . ($category === 'Blanco' ? 'tradicional' : strtolower($category)),
+                'name' => $baseName . ' ' . ($category === 'blanco' ? 'tradicional' : strtolower($category)),
                 'description' => $faker->sentence(10) . ' Ideal para ' . strtolower($category) . '.',
-                'price' => $faker->randomFloat(2, 1, 20), // Precios entre 1.00 y 20.00
+                'purchase_price' => $purchasePrice,
+                'sale_price' => $salePrice,
                 'category' => $category,
-                'stock' => $faker->numberBetween(5, 50) // Stock típico para una panadería
+                'stock' => $faker->numberBetween(5, 50)
             ]);
         }
     }

@@ -18,7 +18,8 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'price' => 'required|numeric|min:0',
+            'purchase_price' => 'required|numeric|min:0',
+            'sale_price' => 'required|numeric|min:0',
             'category' => 'required|in:blanco,integral,dulce,artesanal,sin_gluten,regional,enriquecido,de_molde,crujiente,dulce_relleno,salado,festivo,vegano',
             'stock' => 'required|integer|min:0',
         ]);
@@ -37,7 +38,8 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'sometimes|nullable|string|max:1000',
-            'price' => 'sometimes|numeric|min:0',
+            'purchase_price' => 'sometimes|numeric|min:0',
+            'sale_price' => 'sometimes|numeric|min:0',
             'category' => 'sometimes|in:blanco,integral,dulce,artesanal,sin_gluten,regional,enriquecido,de_molde,crujiente,dulce_relleno,salado,festivo,vegano',
             'stock' => 'sometimes|integer|min:0',
         ]);

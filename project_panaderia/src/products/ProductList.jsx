@@ -20,11 +20,14 @@ const ProductList = ({ products, onEdit, onDelete }) => {
           {products.map(product => (
             <div key={product.id} className="bg-white p-4 rounded-xl shadow-sm border border-cream-100 hover:shadow-md transition-shadow">
               <h3 className="font-semibold text-lg text-amber-900 mb-1">{product.name}</h3>
-              <p className="text-orange-600 font-medium">${product.price.toFixed(2)}</p>
+              <div className="space-y-1 mb-2">
+                <p className="text-sm text-gray-600">Compra: ${product.purchase_price?.toFixed(2) || '0.00'}</p>
+                <p className="text-orange-600 font-medium">Venta: ${product.sale_price?.toFixed(2) || '0.00'}</p>
+              </div>
               <p className="text-sm text-gray-600">Stock: {product.stock}</p>
               {product.category && (
                 <span className="inline-block bg-orange-100 text-orange-800 text-xs px-2.5 py-1 rounded-full mt-2 capitalize">
-                  {product.category}
+                  {product.category.replace('_', ' ')}
                 </span>
               )}
               {product.description && (

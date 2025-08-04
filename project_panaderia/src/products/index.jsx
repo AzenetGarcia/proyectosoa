@@ -20,7 +20,8 @@ const ProductsModule = () => {
       
       const formattedProducts = data.map(product => ({
         ...product,
-        price: Number(product.price) || 0,
+        purchase_price: Number(product.purchase_price) || 0,
+        sale_price: Number(product.sale_price) || 0,
         stock: Number(product.stock) || 0,
         category: product.category || ''
       }));
@@ -48,7 +49,8 @@ const ProductsModule = () => {
       const payload = {
         name: productData.name,
         description: productData.description,
-        price: parseFloat(productData.price) || 0,
+        purchase_price: parseFloat(productData.purchase_price) || 0,
+        sale_price: parseFloat(productData.sale_price) || 0,
         category: productData.category || '',
         stock: parseInt(productData.stock) || 0
       };
@@ -71,7 +73,8 @@ const ProductsModule = () => {
       if (editingProduct) {
         setProducts(products.map(p => p.id === editingProduct.id ? {
           ...result,
-          price: Number(result.price) || 0,
+          purchase_price: Number(result.purchase_price) || 0,
+          sale_price: Number(result.sale_price) || 0,
           stock: Number(result.stock) || 0,
           category: result.category || ''
         } : p));
@@ -79,7 +82,8 @@ const ProductsModule = () => {
       } else {
         setProducts(prev => [...prev, {
           ...result,
-          price: Number(result.price) || 0,
+          purchase_price: Number(result.purchase_price) || 0,
+          sale_price: Number(result.sale_price) || 0,
           stock: Number(result.stock) || 0,
           category: result.category || ''
         }]);

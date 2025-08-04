@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 const initialState = {
   name: '',
   description: '',
-  price: '',
+  purchase_price: '',
+  sale_price: '',
   category: '',
   stock: ''
 };
@@ -17,7 +18,8 @@ const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
     if (editingProduct) {
       setFormData({
         ...editingProduct,
-        price: editingProduct.price?.toString() || '',
+        purchase_price: editingProduct.purchase_price?.toString() || '',
+        sale_price: editingProduct.sale_price?.toString() || '',
         stock: editingProduct.stock?.toString() || '',
         category: editingProduct.category || ''
       });
@@ -34,15 +36,24 @@ const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.price || !formData.stock) {
+    if (!formData.name || !formData.purchase_price || !formData.sale_price || !formData.stock) {
       toast.error('Por favor completa los campos requeridos');
+      return;
+    }
+
+    const purchasePrice = parseFloat(formData.purchase_price);
+    const salePrice = parseFloat(formData.sale_price);
+
+    if (salePrice <= purchasePrice) {
+      toast.error('El precio de venta debe ser mayor al precio de compra');
       return;
     }
 
     const payload = {
       name: formData.name,
       description: formData.description,
-      price: parseFloat(formData.price),
+      purchase_price: purchasePrice,
+      sale_price: salePrice,
       category: formData.category,
       stock: parseInt(formData.stock)
     };
@@ -76,43 +87,6 @@ const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="price" className="block text-sm font-medium text-amber-900 mb-1 flex items-center">
-            <FaDollarSign className="text-orange-500 mr-2" />
-            Precio
-          </label>
-          <input
-            id="price"
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            min="0"
-            step="0.01"
-            className="w-full p-2.5 border border-cream-200 rounded-md bg-cream-50 text-gray-700 placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-            required
-            placeholder="Ingresa el precio"
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="stock" className="block text-sm font-medium text-amber-900 mb-1 flex items-center">
-            <FaBoxes className="text-orange-500 mr-2" />
-            Stock
-          </label>
-          <input
-            id="stock"
-            type="number"
-            name="stock"
-            value={formData.stock}
-            onChange={handleChange}
-            min="0"
-            className="w-full p-2.5 border border-cream-200 rounded-md bg-cream-50 text-gray-700 placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-            required
-            placeholder="Ingresa el stock"
-          />
-        </div>
-
-        <div className="form-group">
           <label htmlFor="category" className="block text-sm font-medium text-amber-900 mb-1 flex items-center">
             Categoría
           </label>
@@ -138,6 +112,62 @@ const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
             <option value="festivo">Festivo</option>
             <option value="vegano">Vegano</option>
           </select>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="purchase_price" className="block text-sm font-medium text-amber-900 mb-1 flex items-center">
+            <FaDollarSign className="text-orange-500 mr-2" />
+            Precio de Compra
+          </label>
+          <input
+            id="purchase_price"
+            type="number"
+            name="purchase_price"
+            value={formData.purchase_price}
+            onChange={handleChange}
+            min="0"
+            step="0.01"
+            className="w-full p-2.5 border border-cream-200 rounded-md bg-cream-50 text-gray-700 placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+            required
+            placeholder="Ingresa el precio de compra"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="sale_price" className="block text-sm font-medium text-amber-900 mb-1 flex items-center">
+            <FaDollarSign className="text-green-500 mr-2" />
+            Precio de Venta
+          </label>
+          <input
+            id="sale_price"
+            type="number"
+            name="sale_price"
+            value={formData.sale_price}
+            onChange={handleChange}
+            min="0"
+            step="0.01"
+            className="w-full p-2.5 border border-cream-200 rounded-md bg-cream-50 text-gray-700 placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+            required
+            placeholder="Ingresa el precio de venta"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="stock" className="block text-sm font-medium text-amber-900 mb-1 flex items-center">
+            <FaBoxes className="text-orange-500 mr-2" />
+            Stock
+          </label>
+          <input
+            id="stock"
+            type="number"
+            name="stock"
+            value={formData.stock}
+            onChange={handleChange}
+            min="0"
+            className="w-full p-2.5 border border-cream-200 rounded-md bg-cream-50 text-gray-700 placeholder:text-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+            required
+            placeholder="Ingresa el stock"
+          />
         </div>
       </div>
 
