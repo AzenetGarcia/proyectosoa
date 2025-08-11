@@ -4,12 +4,8 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-xl max-w-md w-full mx-4 border border-cream-100 shadow-lg">
-        <h3 className="font-semibold text-lg text-amber-900 mb-4 tracking-tight">
-          Confirmar eliminación
-        </h3>
-        <p className="text-gray-600 mb-6 text-sm">
-          ¿Estás seguro de querer eliminar este producto? Esta acción no se puede deshacer.
-        </p>
+        <h3 className="font-semibold text-lg text-amber-900 mb-4 tracking-tight">Confirmar eliminación</h3>
+        <p className="text-gray-600 mb-6 text-sm">¿Estás seguro de querer eliminar este producto? Esta acción no se puede deshacer.</p>
         <div className="flex justify-end space-x-3">
           <button
             onClick={onClose}
