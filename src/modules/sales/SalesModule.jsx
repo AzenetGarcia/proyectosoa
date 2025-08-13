@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import SalesTable from './SalesTable';
 import SalesForm from './SalesForm';
+import SaleDetailModal from './SaleDetailModal';
 
 const API_PRODUCTS = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
@@ -12,6 +13,7 @@ export default function SalesModule() {
   const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [detailId, setDetailId] = useState(null); // <- venta seleccionada para detalle
 
   // Filtros
   const [status, setStatus] = useState('');
@@ -47,8 +49,7 @@ export default function SalesModule() {
     }
   };
 
-  useEffect(() => { load(); }, []); // primera carga
-
+  useEffect(() => { load(); }, []);
   useEffect(() => {
     const t = setTimeout(() => load(), 250);
     return () => clearTimeout(t);
@@ -58,15 +59,12 @@ export default function SalesModule() {
   const handleCancelSale = async (sale) => {
     if (!confirm('¿Cancelar esta venta?')) return;
     try {
-      // 1) cancelar en API Mongo
       const result = await SalesAPI.cancel(sale._id || sale.id, {
-        // como aún no usamos JWT, mandamos el usuario que creó la venta
         user_id: sale.user_id,
       });
 
-      // 2) reponer stock en API Productos
-      await axios.post(`${API_PRODUCTS}/update-stock`, {
-        items: result.products, // [{product_id, quantity}]
+      await axios.post(`${API_PRODUCTS}/products/update-stock`, {
+        items: result.products,
         operation: 'increment',
       });
 
@@ -86,12 +84,12 @@ export default function SalesModule() {
             🧾 Ventas
           </h2>
           <p className="text-sm text-gray-500">
-            Consulta y registra ventas. Valida stock y actualiza inventario.
+            Consulta, detalla e imprime tickets. Registra nuevas ventas validando stock.
           </p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md"
+          className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md shadow-sm"
         >
           ➕ Nueva venta
         </button>
@@ -151,6 +149,7 @@ export default function SalesModule() {
           sales={sales}
           loading={loading}
           onCancel={handleCancelSale}
+          onView={(sale) => setDetailId(sale._id || sale.id)}
         />
       </div>
 
@@ -159,6 +158,14 @@ export default function SalesModule() {
         <SalesForm
           onClose={() => setShowForm(false)}
           onCreated={async () => { setShowForm(false); await load(); }}
+        />
+      )}
+
+      {/* Modal Detalle */}
+      {detailId && (
+        <SaleDetailModal
+          saleId={detailId}
+          onClose={() => setDetailId(null)}
         />
       )}
     </div>
