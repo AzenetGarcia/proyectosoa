@@ -1,53 +1,50 @@
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+// src/App.jsx
+import { Routes, Route, NavLink } from 'react-router-dom';
 import ProductsModule from './products';
-
 import UsersModule from './modules/users/UsersModule';
-
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-cream-50 text-gray-800 font-poppins">
-        <header className="bg-white/80 border-b border-cream-100">
-          <div className="container mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
-            <h1 className="text-xl md:text-2xl font-bold text-amber-900 tracking-tight">
-              🥖 Panel de Administración
-            </h1>
-            <nav className="flex gap-4">
-              <NavLink
-                to="/productos"
-                className={({ isActive }) =>
-                  `px-3 py-1.5 rounded-lg transition ${
-                    isActive ? 'bg-amber-100 text-amber-900' : 'hover:bg-amber-50'
-                  }`
-                }
-              >
-                Productos
-              </NavLink>
-              <NavLink
-                to="/usuarios"
-                className={({ isActive }) =>
-                  `px-3 py-1.5 rounded-lg transition ${
-                    isActive ? 'bg-amber-100 text-amber-900' : 'hover:bg-amber-50'
-                  }`
-                }
-              >
-                Usuarios
-              </NavLink>
-            </nav>
-          </div>
-        </header>
+    <div className="min-h-screen bg-cream-50 text-gray-800 font-poppins">
+      <header className="bg-white/80 border-b border-cream-100">
+        <div className="container mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
+          <h1 className="text-xl md:text-2xl font-bold text-amber-900 tracking-tight">
+            🥖 Panel de Administración
+          </h1>
+          <nav className="flex gap-4">
+            <NavLink
+              to="/productos"
+              className={({ isActive }) =>
+                `px-3 py-1.5 rounded-lg transition ${
+                  isActive ? 'bg-amber-100 text-amber-900' : 'hover:bg-amber-50'
+                }`
+              }
+            >
+              Productos
+            </NavLink>
+            <NavLink
+              to="/usuarios"
+              className={({ isActive }) =>
+                `px-3 py-1.5 rounded-lg transition ${
+                  isActive ? 'bg-amber-100 text-amber-900' : 'hover:bg-amber-50'
+                }`
+              }
+            >
+              Usuarios
+            </NavLink>
+          </nav>
+        </div>
+      </header>
 
-        <main className="container mx-auto p-6 md:p-8">
-          <Routes>
-            <Route path="/" element={<ProductsModule />} />
-            <Route path="/productos" element={<ProductsModule />} />
-            <Route path="/usuarios" element={<UsersModule />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-      </div>
-    </BrowserRouter>
+      <main className="container mx-auto p-6 md:p-8">
+        <Routes>
+          <Route path="/" element={<ProductsModule />} />
+          <Route path="/productos" element={<ProductsModule />} />
+          <Route path="/usuarios" element={<UsersModule />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
@@ -58,3 +55,4 @@ function NotFound() {
     </div>
   );
 }
+
