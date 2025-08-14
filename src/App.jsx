@@ -4,6 +4,7 @@ import { Routes, Route, NavLink } from 'react-router-dom';
 import ProductsModule from './products';
 import UsersModule from './modules/users/UsersModule';
 import SalesModule from './modules/sales/SalesModule';
+import ReportsModule from './modules/reports/ReportsModule';
 
 export default function App() {
   return (
@@ -45,6 +46,14 @@ export default function App() {
             >
               Ventas
             </NavLink>
+            <NavLink
+              to="/consultas"
+              className={({ isActive }) =>
+                `px-3 py-1.5 rounded-lg transition ${isActive ? 'bg-amber-100 text-amber-900' : 'hover:bg-amber-50'}`
+              }
+            >
+              Consultas
+            </NavLink>
           </nav>
         </div>
       </header>
@@ -57,6 +66,7 @@ export default function App() {
           <Route path="/usuarios" element={<UsersModule />} />
           <Route path="/ventas" element={<SalesModule />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/consultas" element={<ReportsModule />} />
         </Routes>
       </main>
     </div>
