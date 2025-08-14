@@ -17,13 +17,19 @@ export default function AssignRole({ userId, onAssign }) {
   };
 
   return (
-    <span>
-      <select value={role} onChange={e=>setRole(e.target.value)}>
+    <div className="action-buttons" style={{ display: 'inline-flex', gap: 8 }}>
+      <select
+        className="select-role"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+      >
         <option value="admin">Administrador</option>
         <option value="vendedor">Vendedor</option>
         <option value="cliente">Cliente</option>
       </select>
-      <button onClick={handleAssignRole}>Asignar</button>
-    </span>
+      <button className="btn btn-assign" onClick={handleAssignRole}>
+        <i className="fas fa-user-check" /> Asignar
+      </button>
+    </div>
   );
 }

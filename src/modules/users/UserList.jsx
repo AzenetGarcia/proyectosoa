@@ -18,25 +18,47 @@ export default function UserList({ users, setUserToEdit, onRefresh }) {
     <div>
       <h3>Lista de Usuarios</h3>
       <table className="table">
-        <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th>
+          </tr>
+        </thead>
         <tbody>
-          {users.map(u => {
-            const uid = u._id || u.id;            // <- usa el que venga
+          {users.map((u) => {
+            const uid = u._id || u.id;
             return (
               <tr key={uid}>
                 {console.log('ROW ->', u)}
                 <td>{u.name}</td>
                 <td>{u.email}</td>
                 <td>{u.role}</td>
-                <td style={{ display:'flex', gap:8 }}>
-                  <button onClick={() => { console.log('EDIT user ->', u); setUserToEdit(u); }}>Edit</button>
-                  <button onClick={() => handleDelete(uid)}>Delete</button>
-                  <AssignRole userId={uid} onAssign={onRefresh} />
+                <td>
+                  <div className="action-buttons" style={{ display: 'flex', gap: 8 }}>
+                    <button
+                      className="btn btn-edit"
+                      onClick={() => { console.log('EDIT user ->', u); setUserToEdit(u); }}
+                    >
+                      <i className="fas fa-edit" /> Edit
+                    </button>
+
+                    <button
+                      className="btn btn-delete"
+                      onClick={() => handleDelete(uid)}
+                    >
+                      <i className="fas fa-trash-alt" /> Delete
+                    </button>
+
+                    <AssignRole userId={uid} onAssign={onRefresh} />
+                  </div>
                 </td>
               </tr>
             );
           })}
-          {!users.length && <tr><td colSpan={4} style={{ textAlign:'center' }}>Sin usuarios</td></tr>}
+          {!users.length && (
+            <tr>
+              <td colSpan={4} style={{ textAlign: 'center' }}>Sin usuarios</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
