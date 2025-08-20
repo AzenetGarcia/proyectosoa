@@ -1,72 +1,85 @@
 // src/App.jsx
-// src/App.jsx
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './modules/auth/AuthContext';
 import ProductsModule from './products';
 import UsersModule from './modules/users/UsersModule';
 import SalesModule from './modules/sales/SalesModule';
 import ReportsModule from './modules/reports/ReportsModule';
+import LoginFancy from './modules/auth/LoginFancy';
+import RegisterMongo from './modules/auth/RegisterMongo';
+import RequireAuth from './modules/auth/RequireAuth';
+import Header from './components/Header';
 
 export default function App() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-cream-50 flex items-center justify-center">
+        <div className="text-amber-900">Cargando...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-cream-50 text-gray-800 font-poppins">
-      {/* Header */}
-      <header className="bg-white/80 border-b border-cream-100">
-        <div className="container mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
-          <h1 className="text-xl md:text-2xl font-bold text-amber-900 tracking-tight">
-            🥖 Panel de Administración
-          </h1>
-          <nav className="flex gap-4">
-            <NavLink
-              to="/productos"
-              className={({ isActive }) =>
-                `px-3 py-1.5 rounded-lg transition ${
-                  isActive ? 'bg-amber-100 text-amber-900' : 'hover:bg-amber-50'
-                }`
-              }
-            >
-              Productos
-            </NavLink>
-            <NavLink
-              to="/usuarios"
-              className={({ isActive }) =>
-                `px-3 py-1.5 rounded-lg transition ${
-                  isActive ? 'bg-amber-100 text-amber-900' : 'hover:bg-amber-50'
-                }`
-              }
-            >
-              Usuarios
-            </NavLink>
-            <NavLink
-              to="/ventas"
-              className={({ isActive }) =>
-                `px-3 py-1.5 rounded-lg transition ${
-                  isActive ? 'bg-amber-100 text-amber-900' : 'hover:bg-amber-50'
-                }`
-              }
-            >
-              Ventas
-            </NavLink>
-            <NavLink
-              to="/consultas"
-              className={({ isActive }) =>
-                `px-3 py-1.5 rounded-lg transition ${isActive ? 'bg-amber-100 text-amber-900' : 'hover:bg-amber-50'}`
-              }
-            >
-              Consultas
-            </NavLink>
-          </nav>
-        </div>
-      </header>
-
-      {/* Main */}
-      <main className="container mx-auto p-6 md:p-8">
+      {user && <Header />}
+      
+      <main className={user ? "container mx-auto p-6 md:p-8" : ""}>
         <Routes>
-          <Route path="/" element={<ProductsModule />} />
-          <Route path="/productos" element={<ProductsModule />} />
-          <Route path="/usuarios" element={<UsersModule />} />
-          <Route path="/ventas" element={<SalesModule />} />
+          {/* Rutas públicas */}
+          <Route 
+            path="/login" 
+            element={user ? <Navigate to="/productos" replace /> : <LoginFancy />} 
+          />
+          <Route 
+            path="/register" 
+            element={user ? <Navigate to="/productos" replace /> : <RegisterMongo />} 
+          />
+          
+          {/* Rutas protegidas */}
+          <Route 
+            path="/" 
+            element={<Navigate to={user ? "/productos" : "/login"} replace />} 
+          />
+          
+          <Route 
+            path="/productos" 
+            element={
+              <RequireAuth allowedRoles={["admin", "vendedor", "cliente"]}>
+                <ProductsModule />
+              </RequireAuth>
+            } 
+          />
+          
+          <Route 
+            path="/usuarios" 
+            element={
+              <RequireAuth allowedRoles={["admin"]}>
+                <UsersModule />
+              </RequireAuth>
+            } 
+          />
+          
+          <Route 
+            path="/ventas" 
+            element={
+              <RequireAuth allowedRoles={["admin", "vendedor"]}>
+                <SalesModule />
+              </RequireAuth>
+            } 
+          />
+          
+          <Route 
+            path="/consultas" 
+            element={
+              <RequireAuth allowedRoles={["admin"]}>
+                <ReportsModule />
+              </RequireAuth>
+            } 
+          />
+          
           <Route path="*" element={<NotFound />} />
-          <Route path="/consultas" element={<ReportsModule />} />
         </Routes>
       </main>
     </div>
@@ -80,4 +93,3 @@ function NotFound() {
     </div>
   );
 }
-
