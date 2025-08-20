@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { mongoLogin } from "../../api/mongoAuth";
+import { useAuth } from "./AuthContext";
 
 export default function LoginFancy() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
@@ -15,16 +17,17 @@ export default function LoginFancy() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { token } = await mongoLogin(form.email, form.password);
-      localStorage.setItem("mongo_token", token);
+      const { token, user } = await mongoLogin(form.email, form.password);
+      login(token, user);
       toast.success("¡Bienvenido!");
-      navigate("/", { replace: true });
+      navigate("/productos", { replace: true });
     } catch (err) {
       toast.error(err?.response?.data?.message || "Credenciales inválidas");
     } finally {
       setLoading(false);
     }
   };
+
 
   const BG =
     "https://images.unsplash.com/photo-1587241321921-91a834d6d191?w=1600&auto=format&fit=crop&q=80";
