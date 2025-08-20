@@ -7,31 +7,14 @@ const initialState = {
   description: '',
   purchase_price: '',
   sale_price: '',
-  category: '',
+  category_id: '',
   stock: ''
 };
 
-const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
+const ProductForm = ({ onSubmit, editingProduct, onCancel, categories = [] }) => {
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const categories = [
-    { value: '', label: 'Seleccione una categoría...' },
-    { value: 'blanco', label: 'Blanco' },
-    { value: 'integral', label: 'Integral' },
-    { value: 'dulce', label: 'Dulce' },
-    { value: 'artesanal', label: 'Artesanal' },
-    { value: 'sin_gluten', label: 'Sin Gluten' },
-    { value: 'regional', label: 'Regional' },
-    { value: 'enriquecido', label: 'Enriquecido' },
-    { value: 'de_molde', label: 'De Molde' },
-    { value: 'crujiente', label: 'Crujiente' },
-    { value: 'dulce_relleno', label: 'Dulce Relleno' },
-    { value: 'salado', label: 'Salado' },
-    { value: 'festivo', label: 'Festivo' },
-    { value: 'vegano', label: 'Vegano' }
-  ];
 
   useEffect(() => {
     if (editingProduct) {
@@ -40,7 +23,7 @@ const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
         description: editingProduct.description || '',
         purchase_price: editingProduct.purchase_price?.toString() || '',
         sale_price: editingProduct.sale_price?.toString() || '',
-        category: editingProduct.category || '',
+        category_id: editingProduct.category_id?.toString() || '',
         stock: editingProduct.stock?.toString() || ''
       });
     } else {
@@ -81,8 +64,8 @@ const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
       newErrors.sale_price = 'El precio de venta no puede ser negativo';
     }
 
-    if (!formData.category) {
-      newErrors.category = 'La categoría es requerida';
+    if (!formData.category_id) {
+      newErrors.category_id = 'La categoría es requerida';
     }
 
     if (!formData.stock) {
@@ -124,7 +107,7 @@ const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
         description: formData.description.trim(),
         purchase_price: parseFloat(formData.purchase_price),
         sale_price: parseFloat(formData.sale_price),
-        category: formData.category,
+        category_id: parseInt(formData.category_id),
         stock: parseInt(formData.stock)
       };
 
@@ -149,6 +132,25 @@ const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
       return ((sale - purchase) / purchase * 100).toFixed(1);
     }
     return '0';
+  };
+
+  const getCategoryDisplayName = (categoryName) => {
+    const categoryMap = {
+      'blanco': 'Blanco',
+      'integral': 'Integral', 
+      'dulce': 'Dulce',
+      'artesanal': 'Artesanal',
+      'sin_gluten': 'Sin Gluten',
+      'regional': 'Regional',
+      'enriquecido': 'Enriquecido',
+      'de_molde': 'De Molde',
+      'crujiente': 'Crujiente',
+      'dulce_relleno': 'Dulce Relleno',
+      'salado': 'Salado',
+      'festivo': 'Festivo',
+      'vegano': 'Vegano'
+    };
+    return categoryMap[categoryName] || categoryName;
   };
 
   return (
@@ -177,25 +179,26 @@ const ProductForm = ({ onSubmit, editingProduct, onCancel }) => {
 
         {/* Categoría */}
         <div className="form-group">
-          <label htmlFor="category" className="block text-sm font-medium text-amber-900 mb-1 flex items-center">
+          <label htmlFor="category_id" className="block text-sm font-medium text-amber-900 mb-1 flex items-center">
             Categoría <span className="text-red-500 ml-1">*</span>
           </label>
           <select
-            id="category"
-            name="category"
-            value={formData.category}
+            id="category_id"
+            name="category_id"
+            value={formData.category_id}
             onChange={handleChange}
             className={`w-full p-2.5 border rounded-md bg-cream-50 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 ${
-              errors.category ? 'border-red-300 bg-red-50' : 'border-cream-200'
+              errors.category_id ? 'border-red-300 bg-red-50' : 'border-cream-200'
             }`}
           >
-            {categories.map(cat => (
-              <option key={cat.value} value={cat.value}>
-                {cat.label}
+            <option value="">Seleccione una categoría...</option>
+            {categories.filter(cat => cat.id !== '').map(cat => (
+              <option key={cat.id} value={cat.id}>
+                {getCategoryDisplayName(cat.name)}
               </option>
             ))}
           </select>
-          {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category}</p>}
+          {errors.category_id && <p className="text-red-500 text-xs mt-1">{errors.category_id}</p>}
         </div>
 
         {/* Precio de Compra */}
